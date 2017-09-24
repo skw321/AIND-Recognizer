@@ -25,4 +25,3 @@ class TestRecognize(TestCase):
         self.assertEqual(len(guesses), self.test_set.num_items, "Number of test items in guesses list incorrect.")
         self.assertIsInstance(guesses[0], str, "The guesses are not strings")
         self.assertIsInstance(guesses[-1], str, "The guesses are not strings")
-
