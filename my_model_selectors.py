@@ -78,6 +78,7 @@ class SelectorBIC(ModelSelector):
 
         lowest_bic = float('inf')
         best_model = None
+
         for i in range(self.min_n_components, self.max_n_components + 1):
             try:
                 model = self.base_model(i)
@@ -90,6 +91,7 @@ class SelectorBIC(ModelSelector):
                     best_model = model
             except:
                 continue
+
         return best_model if best_model else self.base_model(self.n_constant)
 
 
@@ -108,6 +110,7 @@ class SelectorDIC(ModelSelector):
 
         highest_dic = float('-inf')
         best_model = None
+
         for i in range(self.min_n_components, self.max_n_components + 1):
             try:
                 model = self.base_model(i)
@@ -121,6 +124,7 @@ class SelectorDIC(ModelSelector):
                     best_model = model
             except:
                 continue
+
         return best_model if best_model else self.base_model(self.n_constant)
 
 
@@ -134,14 +138,15 @@ class SelectorCV(ModelSelector):
 
         highest_cv = float('-inf')
         best_model = None
+
         for i in range(self.min_n_components, self.max_n_components + 1):
             try:
                 model = self.base_model(i)
                 scores = []
-                for train_i, test_i in KFold(n_splits=2)(self.sequences):
-                    self.X, self.lengths = combine_sequences(train_i, self.sequences)
+                for train, test in KFold(n_splits=2)(self.sequences):
+                    self.X, self.lengths = combine_sequences(train, self.sequences)
                     train_model = self.base_model(i)
-                    X, lengths = combine_sequences(test_i, self.sequences)
+                    X, lengths = combine_sequences(test, self.sequences)
                     scores.append(train_model.score(X, lengths))
                 cv = np.mean(scores)
                 if cv > highest_cv:
@@ -149,4 +154,5 @@ class SelectorCV(ModelSelector):
                     best_model = model
             except:
                 continue
+
         return best_model if best_model else self.base_model(self.n_constant)

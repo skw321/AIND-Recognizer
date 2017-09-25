@@ -22,18 +22,18 @@ def recognize(models: dict, test_set: SinglesData):
     guesses = []
 
     for X, lengths in test_set.get_all_Xlengths().values():
-        word_likelihoods = {}
+        likelihoods = {}
         highest_score = float('-inf')
         best_guess = None
         for word, model in models.items():
             try:
                 score = model.score(X, lengths)
-                word_likelihoods[word] = score
+                likelihoods[word] = score
                 if score > highest_score:
                     highest_score = score
                     best_guess = word
             except:
-                word_likelihoods[word] = float('-inf')
+                likelihoods[word] = float('-inf')
         guesses.append(best_guess)
-        probabilities.append(word_likelihoods)
+        probabilities.append(likelihoods)
     return probabilities, guesses
